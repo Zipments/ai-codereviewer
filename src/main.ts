@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import * as core from "@actions/core";
 import OpenAI from "openai";
-import { Octokit } from "@octokit/rest";
+import { Octokit } from "@octokit/action";
 import parseDiff, { Chunk, File } from "parse-diff";
 import minimatch from "minimatch";
 
@@ -87,9 +87,8 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
 - Use the given description only for the overall context and only comment the code.
 - IMPORTANT: NEVER suggest adding comments to the code.
 
-Review the following code diff in the file "${
-    file.to
-  }" and take the pull request title and description into account when writing the response.
+Review the following code diff in the file "${file.to
+    }" and take the pull request title and description into account when writing the response.
   
 Pull request title: ${prDetails.title}
 Pull request description:
@@ -103,9 +102,9 @@ Git diff to review:
 \`\`\`diff
 ${chunk.content}
 ${chunk.changes
-  // @ts-expect-error - ln and ln2 exists where needed
-  .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
-  .join("\n")}
+      // @ts-expect-error - ln and ln2 exists where needed
+      .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
+      .join("\n")}
 \`\`\`
 `;
 }
